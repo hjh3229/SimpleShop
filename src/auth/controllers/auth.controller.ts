@@ -2,6 +2,8 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { AuthService, UserService } from '../services';
 import {
     CreateUserDto,
+    LoginReqDto,
+    LoginResDto,
     RefreshReqDto,
     SignupResDto,
 } from '../dto';
@@ -27,5 +29,24 @@ export class AuthController {
     @Post('refresh')
     async refresh(@Body() dto: RefreshReqDto): Promise<string> {
         return this.authService.refreshAccessToken(dto.refreshToken);
+    }
+
+    @Post('login')
+    async login(
+        @Req() req,
+        @Body() loginReqDto: LoginReqDto,
+    ): Promise<LoginResDto> {
+        const { ip, method, originalUrl } = req;
+        const reqInfo = {
+            ip,
+            endpoint: `${method} ${originalUrl}`,
+            ua: req.headers['user-agent'] || '',
+        };
+
+        return this.authService.login(  // -> auth.service.ts -> authService.login
+            loginReqDto.email,
+            loginReqDto.password,
+            reqInfo,
+        );
     }
 }
