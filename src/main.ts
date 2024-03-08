@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { getNestOptions } from './app.options';
+import { corsOption, getNestOptions } from './app.options';
 import { ConfigService } from '@nestjs/config';
 import { initializeTransactionalContext } from 'typeorm-transactional';
+import { setSwagger } from './app.swagger';
 import { BusinessExceptionFilter } from './exceptions';
 
 async function bootstrap() {
@@ -17,6 +18,8 @@ async function bootstrap() {
   const serviceName = configService.get<string>('SERVICE_NAME');
   console.log(`runtime: ${env}\tport: ${port}\tserviceName: ${serviceName}`);
 
+  setSwagger(app);
+  app.enableCors(corsOption(env));
   await app.listen(port);
 }
 
