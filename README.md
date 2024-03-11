@@ -21,3 +21,23 @@
 로그아웃 기능 순서
 1. access token, refresh token의 비밀키를 확인한다.
 2. 확인이 된다면 각 토큰을 통해 새로운 토큰을 발급하거나 요청을 보낼 수 없게 블랙리스트에 추가한다.
+
+
+결제 기능 구성
+
+Entity
+- Order : 영수증 같은 주문 상세 내역 정보
+- Product : 각 상품 정보
+- Point : 각 사용자가 가지고 있는 포인트 정보
+- Coupon : 각 쿠폰의 정보
+- Order Item : 주문 상세 내역에 담길 아이템 목록
+- Point Log : 포인트 추가 및 사용 정보
+- Issued Coupon : 쿠폰의 발행 및 사용 정보
+- Shipping Info : 배달 상태
+
+Service
+- initOrder : 유저, 주문 상품 목록, 포인트, 쿠폰 정보, 주소지를 입력하면 주문을 받음
+- completeOrder : 포인트 사용, 쿠폰 사용 후 주문을 확정
+- createOrder : Order를 생성
+- calculateTotalOrder : 주문 정보에서 각 상품 id를 통해 상품 가격을 가져와 합산
+- applyDiscount : initOrder에서 입력한 쿠폰, 포인트 정보로 calculateTotalOrder에서 합산 가격을 할인
