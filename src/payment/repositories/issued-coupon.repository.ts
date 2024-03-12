@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { EntityManager, Repository } from 'typeorm';
-import { IssuedCoupon } from '../entities';
+import { Coupon, IssuedCoupon } from '../entities';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { CreateCouponDto } from '../dto/create-coupon.dto';
 import { UserRepository } from 'src/auth/repositories';
@@ -26,7 +26,7 @@ export class IssuedCouponRepository extends Repository<IssuedCoupon> {
         return this.save(issuedCoupon);
     }
 
-    async give(createCouponDto: CreateCouponDto, isAdmin: User): Promise<IssuedCoupon> { // isAdmin이 user에게 coupon 전달
+    async give(userEmail: string, coupon: Coupon, isAdmin: User): Promise<IssuedCoupon> { // isAdmin이 user에게 coupon 전달
         if (isAdmin.role !== 'admin') { // admin만 쿠폰을 배포할 수 있도록
             throw new BusinessException(
                 'auth',
@@ -36,13 +36,7 @@ export class IssuedCouponRepository extends Repository<IssuedCoupon> {
             );
         }
 
-        const user = await this.userRepository.findOneByEmail(createCouponDto.userEmail);
-        const coupon = await this.couponRepository.create({
-            type: createCouponDto.couponType,
-            value: createCouponDto.couponValue,
-        });
-
-        this.couponRepository.save(coupon);
+        const user = await this.userRepository.findOneByEmail(userEmail);
 
         const newCoupon = new IssuedCoupon();
         newCoupon.give(user, coupon);

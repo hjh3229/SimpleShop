@@ -171,7 +171,13 @@ export class PaymentService {
     }
 
     async createCoupon(createCouponDto: CreateCouponDto, isAdmin: User): Promise<IssuedCoupon> {
-        const issuedCoupon = await this.issuedCouponRepository.give(createCouponDto, isAdmin);
+        const coupon = await this.couponRepository.findOne({
+            where: {
+                type: createCouponDto.couponType,
+                value: createCouponDto.couponValue,
+            },
+        });
+        const issuedCoupon = await this.issuedCouponRepository.give(createCouponDto.userEmail, coupon, isAdmin);
         return issuedCoupon;
     }
 }
