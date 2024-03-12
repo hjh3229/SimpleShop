@@ -3,6 +3,9 @@ import { Column, Entity, OneToMany, Relation } from 'typeorm';
 import { AccessToken } from './access-token.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { AccessLog } from './access-log.entity';
+import { Order } from 'src/payment/entities/order.entity';
+import { Point } from 'src/payment/entities/point.entity';
+import { IssuedCoupon } from 'src/payment/entities';
 
 export type UserRole = 'admin' | 'user';
 
@@ -37,4 +40,13 @@ export class User extends BaseEntity {
 
     @OneToMany(() => AccessLog, (log) => log.user)
     accessLogs: Relation<AccessLog[]>;
+
+    @OneToMany(() => Order, (order) => order.user)
+    orders: Order[];
+
+    @OneToMany(() => Point, (point) => point.user)
+    point: Point;
+
+    @OneToMany(() => IssuedCoupon, (coupon) => coupon.user)
+    coupon: IssuedCoupon;
 }
