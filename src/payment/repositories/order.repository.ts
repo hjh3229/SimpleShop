@@ -47,6 +47,11 @@ export class OrderRepository extends Repository<Order> {
                 order.pointAmountUsed,
                 '주문 사용',
             ),
+            this.pointRepository.add( // 포인트 적립
+                order.user.id,
+                Math.floor(order.amount / 100), // 소수점은 버림
+                '결제 금액 1% 적립'
+            ),
         ]);
         return this.save(order);
     }

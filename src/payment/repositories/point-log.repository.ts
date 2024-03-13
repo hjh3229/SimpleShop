@@ -20,4 +20,11 @@ export class PointLogRepository extends Repository<PointLog> {
         pointLog.use(amountToUse, reason);
         return this.save(pointLog);
     }
+
+    add(point: Point, amountToAdd: number, reason: string): Promise<PointLog> { // 포인트 추가
+        const pointLog = new PointLog();
+        pointLog.point = point;
+        pointLog.add(amountToAdd, reason);
+        return this.save(pointLog)
+    }
 }

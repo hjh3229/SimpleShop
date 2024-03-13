@@ -25,4 +25,8 @@ export class Point extends BaseEntity {
     use(amountToUse: number) {
         this.availableAmount -= amountToUse;
     }
+
+    add(amountToAdd: number) {
+        this.availableAmount += amountToAdd;
+    }
 }

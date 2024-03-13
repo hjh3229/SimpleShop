@@ -22,4 +22,11 @@ export class PointRepository extends Repository<Point> {
         await this.pointLogRepository.use(point, amountToUse, reason);
         return this.save(point);
     }
+
+    async add(userId, amountToAdd: number, reason: string): Promise<Point> { // 유처 보유 포인트 추가
+        const point = await this.findOne({ where: { user: { id: userId } } });
+        point.add(amountToAdd);
+        await this.pointLogRepository.add(point, amountToAdd, reason);
+        return this.save(point)
+    }
 }

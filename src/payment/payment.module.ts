@@ -22,6 +22,7 @@ import {
 } from './entities';
 import { AuthModule } from '../auth/auth.module';
 import { PaymentService, ProductService } from './services';
+import { paymentController } from './controllers';
 
 @Module({
     imports: [
@@ -49,6 +50,9 @@ import { PaymentService, ProductService } from './services';
         IssuedCouponRepository,
         PointRepository,
         PointLogRepository,
+    ],
+    controllers: [
+        paymentController,
     ],
     exports: [ // payment.module 밖에서 사용할 수 있도록 exports
         PaymentService,
