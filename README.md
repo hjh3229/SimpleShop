@@ -37,7 +37,7 @@ Entity
 
 Service
 - initOrder : 유저, 주문 상품 목록, 포인트, 쿠폰 정보, 주소지를 입력하면 주문을 받음
-- completeOrder : 포인트 사용, 쿠폰 사용 후 주문을 확정
+- completeOrder : 포인트 사용, 쿠폰 사용 후 주문을 확정 (주문 상태, 포인트 사용 처리, 쿠폰 사용 처리, 포인트 적립 처리)
 - createOrder : Order를 생성
 - calculateTotalOrder : 주문 정보에서 각 상품 id를 통해 상품 가격을 가져와 합산
-- applyDiscount : initOrder에서 입력한 쿠폰, 포인트 정보로 calculateTotalOrder에서 합산 가격을 할인
+- applyDiscount : initOrder에서 입력한 쿠폰, 포인트 정보로 calculateTotalOrder에서 합산 가격을 할인 
