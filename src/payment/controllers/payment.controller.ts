@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { PaymentService, ProductService } from "../services";
 import { CreateOrderDto } from "../dto/create-order.dto";
 import { OrderResDto } from "../dto/order-res.dto";
@@ -46,11 +46,10 @@ export class paymentController {
         }
     }
 
-    @Post('createCoupon')
-    @UseGuards(JwtStrategy)
-    async createCoupon(@Body() createCouponDto: CreateCouponDto, @Request() req): Promise<CouponResDto> {
-        const isAdmin = req.user;
-        const issuedCoupon = await this.paymentService.createCoupon(createCouponDto, isAdmin);
+    @Post('createCoupon/:id')
+    async createCoupon(@Body() createCouponDto: CreateCouponDto, @Param('id') id: string): Promise<CouponResDto> {
+        const isAdminId = id;
+        const issuedCoupon = await this.paymentService.createCoupon(createCouponDto, isAdminId);
         return {
             user: issuedCoupon.user,
             coupon: issuedCoupon.coupon,
