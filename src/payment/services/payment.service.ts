@@ -14,14 +14,12 @@ import {
 import { Transactional } from 'typeorm-transactional';
 import { CreateCouponDto } from '../dto/create-coupon.dto';
 import { User } from 'src/auth/entities';
-import { UserRepository } from 'src/auth/repositories';
 
 @Injectable()
 export class PaymentService {
     constructor(
         private readonly issuedCouponRepository: IssuedCouponRepository,
         private readonly pointRepository: PointRepository,
-        private readonly userRepository: UserRepository,
         private readonly productService: ProductService,
         private readonly shippingInfoRepository: ShippingInfoRepository,
         private readonly orderRepository: OrderRepository,
@@ -173,9 +171,8 @@ export class PaymentService {
         return pointAmountToUse;
     }
 
-    async createCoupon(createCouponDto: CreateCouponDto, isAdminId: string): Promise<IssuedCoupon> {
+    async createCoupon(createCouponDto: CreateCouponDto, isAdmin: User): Promise<IssuedCoupon> {
         const coupon = await this.couponRepository.findOne({ where: { id: createCouponDto.couponId } });
-        const isAdmin = await this.userRepository.findOne({ where: { id: isAdminId } })
         const issuedCoupon = await this.issuedCouponRepository.give(createCouponDto.userEmail, coupon, isAdmin);
         return issuedCoupon;
     }
