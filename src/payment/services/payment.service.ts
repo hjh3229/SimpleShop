@@ -7,6 +7,7 @@ import {
     CouponRepository,
     IssuedCouponRepository,
     OrderRepository,
+    PointLogRepository,
     PointRepository,
     ShippingInfoRepository,
 } from '../repositories';
@@ -19,6 +20,7 @@ export class PaymentService {
     constructor(
         private readonly issuedCouponRepository: IssuedCouponRepository,
         private readonly pointRepository: PointRepository,
+        private readonly pointLogRepository: PointLogRepository,
         private readonly productService: ProductService,
         private readonly shippingInfoRepository: ShippingInfoRepository,
         private readonly orderRepository: OrderRepository,
@@ -171,12 +173,7 @@ export class PaymentService {
     }
 
     async createCoupon(createCouponDto: CreateCouponDto, isAdmin: User): Promise<IssuedCoupon> {
-        const coupon = await this.couponRepository.findOne({
-            where: {
-                type: createCouponDto.couponType,
-                value: createCouponDto.couponValue,
-            },
-        });
+        const coupon = await this.couponRepository.findOne({ where: { id: createCouponDto.couponId } });
         const issuedCoupon = await this.issuedCouponRepository.give(createCouponDto.userEmail, coupon, isAdmin);
         return issuedCoupon;
     }
