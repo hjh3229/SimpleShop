@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { IssuedCoupon, Order, OrderItem } from '../entities';
+import { IssuedCoupon, Order, OrderItem, PointLog } from '../entities';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { BusinessException } from '../../exceptions';
 import { ProductService } from './product.service';
@@ -7,13 +7,16 @@ import {
     CouponRepository,
     IssuedCouponRepository,
     OrderRepository,
-    PointLogRepository,
     PointRepository,
     ShippingInfoRepository,
 } from '../repositories';
 import { Transactional } from 'typeorm-transactional';
 import { CreateCouponDto } from '../dto/create-coupon.dto';
 import { User } from 'src/auth/entities';
+import { PointLogResDto } from '../dto/point-res.dto';
+import { UserRepository } from 'src/auth/repositories';
+import { PointLogDto } from '../dto/point-log.dto';
+import { getConnection } from 'typeorm';
 
 @Injectable()
 export class PaymentService {
@@ -24,6 +27,7 @@ export class PaymentService {
         private readonly shippingInfoRepository: ShippingInfoRepository,
         private readonly orderRepository: OrderRepository,
         private readonly couponRepository: CouponRepository,
+        private readonly userRepository: UserRepository,
     ) { }
 
     @Transactional()
@@ -175,5 +179,28 @@ export class PaymentService {
         const coupon = await this.couponRepository.findOne({ where: { id: createCouponDto.couponId } });
         const issuedCoupon = await this.issuedCouponRepository.give(createCouponDto.userEmail, coupon, isAdmin);
         return issuedCoupon;
+    }
+
+    async checkPointLog(phone: string): Promise<PointLogResDto> { // 핸드폰 번호를 통해 유저의 포인트 조회
+        const user = await this.userRepository.findOne({ where: { phone: phone } });
+        const availableAmount = user.point.availableAmount;
+        const pointInfo: PointLogResDto = { user: user, availableAmount: availableAmount, logs: [] }
+        const pointLogs = await getConnection()
+            .getRepository(PointLog)
+            .createQueryBuilder("pointLog")
+            .leftJoinAndSelect("pointLog.point", "point")
+            .where("point.user = :phone", { phone }) // user의 번호가 phone 인 것만을 찾는다.
+            .getMany();
+
+        pointLogs.forEach(log => { // pointLogs에서 각 정보를 원하는 형태로 가져와 
+            const logDto: PointLogDto = {
+                amount: log.amount,
+                reason: log.reason,
+                type: log.type,
+            };
+            pointInfo.logs.push(logDto); // push로 저장
+        });
+
+        return pointInfo;
     }
 }
