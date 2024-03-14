@@ -8,7 +8,7 @@ export type OrderResDto = {
     status: OrderStatus;
     items: Relation<OrderItem[]>;
     pointAmountUsed: number;
-    pointAmountHave: Point; // 쓰고 남은 포인트
+    pointAmountHave: number; // 쓰고 남은 포인트
     usedIssuedCoupon: Relation<IssuedCoupon>;
     shippingInfo: Relation<ShippingInfo>;
 }

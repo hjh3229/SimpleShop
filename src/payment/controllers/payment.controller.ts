@@ -24,7 +24,7 @@ export class paymentController {
             status: order.status,
             items: order.items,
             pointAmountUsed: order.pointAmountUsed,
-            pointAmountHave: order.user.point,
+            pointAmountHave: order.user.point.availableAmount,
             usedIssuedCoupon: order.usedIssuedCoupon,
             shippingInfo: order.shippingInfo,
         }
@@ -40,7 +40,7 @@ export class paymentController {
             status: order.status,
             items: order.items,
             pointAmountUsed: order.pointAmountUsed,
-            pointAmountHave: order.user.point,
+            pointAmountHave: order.user.point.availableAmount,
             usedIssuedCoupon: order.usedIssuedCoupon,
             shippingInfo: order.shippingInfo,
         }
