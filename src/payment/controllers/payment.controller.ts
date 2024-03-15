@@ -8,7 +8,7 @@ import { User } from "src/auth/entities";
 import { JwtStrategy } from "src/auth/strategies";
 
 @Controller('payment')
-export class paymentController {
+export class PaymentController {
     constructor(
         private readonly paymentService: PaymentService,
         private readonly productService: ProductService,
